@@ -1,0 +1,39 @@
+baseURL = "https://wittman.xyz/"
+languageCode = "en-us"
+title = "wittman.xyz"
+theme = "archie"
+# Code Highlight
+pygmentsstyle = "monokai"
+pygmentscodefences = true
+pygmentscodefencesguesssyntax = true
+
+[params]
+    mode = "dark"
+    subtitle = "I'll probably never write more than 3 things here"
+
+[[params.social]]
+name = "GitHub"
+icon = "github"
+url = "https://github.com/DavidWittman"
+
+[[params.social]]
+name = "Twitter"
+icon = "twitter"
+url = "https://twitter.com/dave0ps"
+
+[[params.social]]
+name = "GitLab"
+icon = "gitlab"
+url = "https://gitlab.com/wittman/"
+
+# Main menu Items
+
+[[menu.main]]
+name = "Home"
+url = "/"
+weight = 1
+
+[[menu.main]]
+name = "Posts"
+url = "/posts"
+weight = 2
