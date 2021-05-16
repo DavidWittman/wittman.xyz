@@ -2,6 +2,7 @@ baseURL = "https://dave.wittman.xyz/"
 languageCode = "en-us"
 title = "wittman.xyz"
 theme = "archie"
+googleAnalytics = "UA-35155978-1"
 # Code Highlight
 pygmentsstyle = "monokai"
 pygmentscodefences = true
