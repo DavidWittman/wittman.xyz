@@ -1,6 +1,7 @@
 ---
 title: "Deleting an AMI and its volumes with aws-cli"
 date: 2021-05-13T21:04:32-05:00
+description: Deleting AMIs completely should not be this difficult.
 draft: false
 tags: [aws, bash]
 ---

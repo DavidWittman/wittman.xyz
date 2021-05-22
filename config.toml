@@ -10,6 +10,7 @@ pygmentscodefencesguesssyntax = true
 
 [params]
     mode = "dark"
+    description = "Personal technology related ramblings of an AWS Janitor"
     subtitle = "I'll probably never write more than 3 things here"
 
 [[params.social]]
