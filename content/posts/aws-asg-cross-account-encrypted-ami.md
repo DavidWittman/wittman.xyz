@@ -1,11 +1,14 @@
 ---
 title: "Launching a Cross-Account CMK Encrypted AMI in an Auto-Scaling Group"
 date: 2021-05-12T18:22:07-05:00
+description: >
+  How to create the appropriate KMS grants to launch an encrypted AMI on another AWS account in an Auto-Scaling Group.
+  It's really easy to mess up if you're just skimming documentation like I did.
 tags: [aws]
 ---
 
 If you have shared an encrypted AMI with another AWS account and instances in an Auto-Scaling Group using that AMI fail
-to start, you might see the following State Transition Message:
+to start, you might see the following State Transition Message in the EC2 console:
 
 > Client.InternalError: Client error on launch
 

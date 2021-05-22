@@ -1,6 +1,9 @@
 ---
 title: "The Packer File Provisioner for Windows is Miserably Slow"
 date: 2021-05-14T10:56:57-05:00
+description: >
+  Use the awscli and Amazon S3 to copy files to your Windows AMI builds with Packer 100x faster than
+  the File Provisioner.
 draft: false
 tags: [packer, windows, aws, s3]
 ---
