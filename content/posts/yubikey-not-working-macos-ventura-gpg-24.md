@@ -1,7 +1,8 @@
 ---
 title: "Yubikey fails on macOS Ventura with \"sign_and_send_pubkey: signing failed\""
 date: 2023-02-24T20:37:50-05:00
-description: Fixing the "sign_and_send_pubkey: signing failed" error on macOS with a Yubikey
+description: >
+  Fixing the "sign_and_send_pubkey: signing failed" error on macOS with a Yubikey
 draft: false
 ---
 
