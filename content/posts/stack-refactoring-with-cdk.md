@@ -305,8 +305,8 @@ Hooray! The S3 bucket is now in the new stack. I'm very grateful for this new fe
 ## tl;dr
 
 1. Redeploy "before" stack without unsupported metadata resources. `cdk deploy --version-reporting=false --path-metadata=false --asset-metadata=false -e StackRefactorStack`
-1. Make changes in CDK, be sure to set `generateBootstrapVersionRule: false` when instantiating a new stack.
+1. Make changes in CDK, be sure to set `generateBootstrapVersionRule: false` when instantiating the new stack. ([more info](#adding-the-bucket-stack-to-the-cdkapp))
 1. Synthesize new templates. `cdk synth --version-reporting=false --path-metadata=false --asset-metadata=false`
-1. Create the JSON refactor map to indicate which resource is moving between which stacks
+1. Create the JSON resource mapping to indicate which resource is moving between which stacks. ([more info](#create-the-resource-mapping))
 1. Create stack refactor task. `aws cloudformation create-stack-refactor --stack-definitions StackName=BucketStack,TemplateBody@=file://cdk.out/BucketStack.template.json StackName=StackRefactorStack,TemplateBody@=file://cdk.out/StackRefactorStack.template.json --enable-stack-creation --resource-mappings file://refactor.json`
 1. Execute refactor. `aws cloudformation execute-stack-refactor --stack-refactor-id $REFACTOR_ID`
