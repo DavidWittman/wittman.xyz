@@ -11,9 +11,9 @@ tags: [aws, cloudformation, cdk]
 
 Last week, [AWS announced](https://aws.amazon.com/blogs/devops/introducing-aws-cloudformation-stack-refactoring/) the availability of a new feature in CloudFormation called "Stack Refactoring". This feature is one which addresses one of the biggest weaknesses in CloudFormation in my opinion: state management. It allows you to refactor your CloudFormation stacks by moving resources between stacks after they have been deployed. This is a boon for breaking up monolithic stacks, separating concenrns, or just improving maintainability of your stacks as your project grows.
 
-Previously, there were some _very manual_ ways to achieve this functionality. You could set the deletion policy on the resources in your old stacks, remove the resources, and then do the reverse on your new stack and import the resource. But this process was very manual and has a high potential of error. Fortunately, with the introduction of Stack Refactoring moving resources between Cloudformation Stacks can be completed in a much easier way.
+Previously, there were some _very manual_ ways to achieve this functionality. You could set the deletion policy on the resources in your old stacks, remove the resources, and then do the reverse on your new stack and import the resource. But this process was very manual and had a high potential of error. Fortunately, with the introduction of Stack Refactoring, moving resources between CloudFormation Stacks can be completed in a much easier way.
 
-That said... having this feature in CloudFormation is great and all, but these days I pretty much exclusively work with CloudFormation via CDK, so I wanted to take some time to see how Stack Refactoring fits into the CDK workflow. It required a little bit of massaging to get it all working, but once I had everything prepared correctly the refactor worked just as expected in CDK. This post will walk you through my experiences using Stack Refactor with CDK and hopefully help you avoid some of the same issues I had along the way.
+That said... having this feature in CloudFormation is great and all, but these days I pretty much exclusively work with CloudFormation via CDK, so I wanted to take some time to see how Stack Refactoring fits into the CDK workflow. It required a little bit of massaging to get it all working, but once I had everything prepared correctly the refactor worked just fine in CDK. This post will walk you through my experiences using Stack Refactor with CDK and hopefully help you avoid some of the same issues I had along the way.
 
 If you just want to know the essentials, skip to the [tl;dr](#tldr).
 
@@ -173,7 +173,7 @@ export class StackRefactorStack extends cdk.Stack {
 }
 ```
 
-#### Adding the "Bucket" Stack to the cdk.App
+#### Adding the "Bucket" Stack to `cdk.App`
 
 If you have an existing "destination" stack for the refactor, you can probably skip this step.
 
@@ -190,6 +190,8 @@ Stack Refactors don't support `Condition` or `Rule` resources in templates when 
     "StatusReason": "arn:aws:cloudformation:us-east-2:123456789012:stack/BucketStack/ec6f69ee-2ce7-4a32-b7fb-d11b104c480c: Following template sections are not allowed when creating a stack while refactoring: Conditions, Rules"
 }
 ```
+
+So when you're instantiating the `BucketStack`, pass in a custom `synthesizer` like this to avoid creating the CDK Bootstrap `Rule` resource:
 
 ``` typescript
 new BucketStack(app, 'BucketStack', {
