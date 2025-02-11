@@ -9,9 +9,11 @@ tags: [aws, cloudformation, cdk]
 <!-- https://aws.amazon.com/blogs/devops/introducing-aws-cloudformation-stack-refactoring/ -->
 <!-- https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stack-refactoring.html -->
 
-Last week, [AWS announced](https://aws.amazon.com/blogs/devops/introducing-aws-cloudformation-stack-refactoring/) the availability of a new feature in CloudFormation called "Stack Refactoring". This feature is one which addresses one of the biggest weaknesses in CloudFormation in my opinion: state management. It allows you to refactor your CloudFormation stacks by moving resources between stacks after they have been deployed. Previously, there were some _very manual_ ways to achieve this via imports, but with Stack Refactoring it can be done relatively painlessly.
+Last week, [AWS announced](https://aws.amazon.com/blogs/devops/introducing-aws-cloudformation-stack-refactoring/) the availability of a new feature in CloudFormation called "Stack Refactoring". This feature is one which addresses one of the biggest weaknesses in CloudFormation in my opinion: state management. It allows you to refactor your CloudFormation stacks by moving resources between stacks after they have been deployed. This is a boon for breaking up monolithic stacks, separating concenrns, or just improving maintainability of your stacks as your project grows.
 
-Having this feature in CloudFormation is great and all, but these days I pretty much exclusively work with CloudFormation via CDK, so I wanted to take some time to see how Stack Refactoring fits into the CDK workflow. It required a little bit of massaging to get it all working, but once I had everything prepared correctly the refactor worked just as expected in CDK. This post will walk you through my experiences using Stack Refactor with CDK and hopefully help you avoid some of the same issues I had along the way.
+Previously, there were some _very manual_ ways to achieve this functionality. You could set the deletion policy on the resources in your old stacks, remove the resources, and then do the reverse on your new stack and import the resource. But this process was very manual and has a high potential of error. Fortunately, with the introduction of Stack Refactoring moving resources between Cloudformation Stacks can be completed in a much easier way.
+
+That said... having this feature in CloudFormation is great and all, but these days I pretty much exclusively work with CloudFormation via CDK, so I wanted to take some time to see how Stack Refactoring fits into the CDK workflow. It required a little bit of massaging to get it all working, but once I had everything prepared correctly the refactor worked just as expected in CDK. This post will walk you through my experiences using Stack Refactor with CDK and hopefully help you avoid some of the same issues I had along the way.
 
 If you just want to know the essentials, skip to the [tl;dr](#tldr).
 
@@ -26,7 +28,7 @@ This example is a pretty simple one. We'll start with a single CDK stack which c
 
 The process is relatively straightforward, but there are a few gotchas when doing a stack refactor with CDK that I hope I can help you avoid. I'm going to be creating a new stack as a part of the refactor process, which means CloudFormation will create the new stack when I execute the refactor step. But this process will also work -- with a few modifications -- if you have two stacks which are already deployed and you just want to move a resource between them.
 
-### Preparing the "Before" Stack
+### Step 1: Preparing the "Before" Stack
 
 Here's what the "before" stack looks like: a single CloudFormation stack with an EC2 instance, S3 Bucket, and IAM role. 
 
@@ -100,7 +102,7 @@ This will redeploy your stack without the metadata resources and allow you to cr
 
 If you're still seeing this error even after redeploying your "before" stack, check the template definition as deployed in CloudFormation, and make sure you don't see any metadata in the template. One thing which I found was that CloudFormation would report that the stack was correctly deployed, but since there were no physical resource changes in my template, it never actually removed the metadata. So I just made a meaningless change to a resource (I updated the description on my Security Group), redeployed, and then it worked.
 
-### Moving the resource in CDK
+### Step 2: Moving the resource in CDK
 
 Okay, now that we have prepared the "before" stack, let's move the S3 Bucket to a new stack. There's another gotcha here: stack refactors when you are creating the new stack as a part of the refactor do not support `Condition` or `Rule` resources, so we'll need to make some modifications to how our new stack is synthesized in order to avoid creating these resources. I cover how to do this [below](#adding-the-bucket-stack-to-the-cdkapp).
 
@@ -201,7 +203,7 @@ new BucketStack(app, 'BucketStack', {
 
 This takes care of the `Rule` resource, but you'll also need to pass flags to `cdk deploy` and `cdk synth` to avoid creating the `Condition` resources. See [below](#synthesize-the-stacks).
 
-### Create the Resource Mapping
+### Step 3: Create the Resource Mapping
 
 The "resource mapping" is a JSON document which tells CloudFormation which resources are moving and which stacks are involved in the refactor. Here is what ours will look like in this example:
 
@@ -274,7 +276,7 @@ $ aws cloudformation describe-stack-refactor --stack-refactor-id 2e854a07-73b0-4
 
 Mine was failing on my first few attempts because I wasn't passing in the "before" stack in the stack definitions. It gave me an error like `The resource Bucket83908E77 defined in the resources mapping did no move from its original stack StackRefactorStack. Review your stack template desired state.` and all I had to do to fix that was make sure I passed in both stacks to the `--stack-definitions`.
 
-### Execute the Stack Refactor
+### Step 4: Execute the Stack Refactor
 
 With all of the annoying prep work out of the way, executing the refactor itself should be the easy part. Take the refactor ID from before, and run `execute-stack-refactor`.
 
