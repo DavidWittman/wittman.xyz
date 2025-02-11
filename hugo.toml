@@ -2,16 +2,17 @@ baseURL = "https://dave.wittman.xyz/"
 languageCode = "en-us"
 title = "wittman.xyz"
 theme = "archie"
-googleAnalytics = "UA-35155978-1"
+
 # Code Highlight
 pygmentsstyle = "monokai"
 pygmentscodefences = true
 pygmentscodefencesguesssyntax = true
 
 [params]
-    mode = "dark"
-    description = "Personal technology related ramblings of an AWS Janitor"
-    subtitle = "A tale of broken software"
+author = "Dave Wittman"
+description = "Personal technology related ramblings of an AWS Janitor"
+subtitle = "A tale of broken software"
+mode = "toggle"
 
 [[params.social]]
 name = "GitHub"
@@ -28,8 +29,11 @@ name = "GitLab"
 icon = "gitlab"
 url = "https://gitlab.com/wittman/"
 
-# Main menu Items
+[services]
+  [services.googleAnalytics]
+    ID = "G-RRF5PMETE7"
 
+# Main menu Items
 [[menu.main]]
 name = "Home"
 url = "/"
