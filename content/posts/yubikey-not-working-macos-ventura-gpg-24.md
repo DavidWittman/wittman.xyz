@@ -21,3 +21,13 @@ After adding that line to `scdaemon.conf`, I just restarted the GPG daemon and I
 ```
 pkill gpg-agent; gpg-agent --homedir $HOME/.gnupg --daemon
 ```
+
+## Other causes
+
+I have also found that this error can be caused by having an incorrect `pinentry-program` in `~/.gnupg/gpg-agent.conf`. In my case, I had this in my config:
+
+```
+pinentry-program /opt/homebrew/bin/pinentry-mac
+```
+
+But somewhere along the line, `pinentry-mac` was removed. You can verify if it does/doesn't exist by running `/opt/homebrew/bin/pinentry-mac` in your shell. I ran `brew install pinentry-mac` and it resolved the issue for me.
