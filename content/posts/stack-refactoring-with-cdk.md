@@ -9,6 +9,8 @@ tags: [aws, cloudformation, cdk]
 <!-- https://aws.amazon.com/blogs/devops/introducing-aws-cloudformation-stack-refactoring/ -->
 <!-- https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stack-refactoring.html -->
 
+Update (September 2025): CDK now has [built-in support for refactoring stacks](https://aws.amazon.com/blogs/devops/aws-cloud-development-kit-cdk-launches-refactor/). Use that before attempting anything described below.
+
 Last week, [AWS announced](https://aws.amazon.com/blogs/devops/introducing-aws-cloudformation-stack-refactoring/) the availability of a new feature in CloudFormation called "Stack Refactoring". This feature is one which addresses one of the biggest weaknesses in CloudFormation in my opinion: state management. It allows you to refactor your CloudFormation stacks by moving resources between stacks after they have been deployed. This is a boon for breaking up monolithic stacks, separating concerns, or just improving maintainability of your stacks as your project grows.
 
 Previously, there were some _very manual_ ways to achieve this functionality. You could set the deletion policy on the resources in your old stacks, remove the resources, and then do the reverse on your new stack and import the resource. But this process was very manual and had a high potential of error. Fortunately, with the introduction of Stack Refactoring, moving resources between CloudFormation Stacks can be completed in a much easier way.
